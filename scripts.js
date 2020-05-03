@@ -12,9 +12,12 @@ let backColor = null;
 let flightStatus = null;
 let spaceShuttleHeight = null;
 let rocket = null;
-let up=0,left=0
+let up=250,left=0
+let firstTime = false;
+let height = null;
 
 function init() {
+
   takeOffBtn = document.getElementById("takeoff");
   takeOffBtn.addEventListener("click", function () {
     action("takeoff");
@@ -50,7 +53,11 @@ function init() {
   rightButton = document.getElementById("rightButton");
   rightButton.addEventListener("click", function () {move("Right");
 });
-
+if (firstTime === false)
+{
+  document.getElementById("rocket").style.top = up + "px";
+  firstTime = true;
+}
 
 }
 
@@ -62,16 +69,21 @@ function action(actionType) {
       if (response === true) {
         flightStatus.innerHTML = "Shuttle in flight.";
         backColor.style.backgroundColor = "blue";
-
-        spaceShuttleHeight.innerHTML =
-          Number(spaceShuttleHeight.innerHTML) + 10000;
+        //height += 10000
+        //spaceShuttleHeight.innerHTML = height;
+        move("Up")
       }
       break;
     case "landing":
       alert("The shuttle is landing. Landing gear engaged.");
       flightStatus.innerHTML = "The shuttle has landed.";
       backColor.style.backgroundColor = "green";
-      spaceShuttleHeight.innerHTML = 0;
+      height =0;
+        spaceShuttleHeight.innerHTML = height;
+        up = 250;
+        document.getElementById("rocket").style.top = up +"px";
+        left = 0;
+        document.getElementById("rocket").style.right = left+"px";
       break;
     case "abort":
       response = confirm("Confirm that you want to abort the mission.");
@@ -79,7 +91,12 @@ function action(actionType) {
       if (response === true) {
         flightStatus.innerHTML = "Mission aborted.";
         backColor.style.backgroundColor = "green";
-        spaceShuttleHeight.innerHTML = 0;
+        height =0;
+        spaceShuttleHeight.innerHTML = height;
+        up = 250;
+        document.getElementById("rocket").style.top = up +"px";
+        left = 0;
+        document.getElementById("rocket").style.right = left+"px";
       }
       break;
   }
@@ -89,25 +106,41 @@ function move(movement) {
 
   switch (movement) {
     case "Up":
-      up += 10;
-      document.getElementById("rocket").style.bottom = up +"px"
-
+      if (height < 250000)
+      {
+        up -= 10;
+        document.getElementById("rocket").style.top = up +"px";
+        height += 10000;
+        spaceShuttleHeight.innerHTML = height;
+      }
       break;
+
     case "Down":
-      up -= 10;
-      document.getElementById("rocket").style.bottom = up +"px"
-
+      if (height >= 10000)
+      {
+        up += 10;
+        document.getElementById("rocket").style.top = up +"px";
+        height -= 10000;
+        spaceShuttleHeight.innerHTML = height;
+      }
       break;
+
     case "Left":
-      left +=10;
-      document.getElementById("rocket").style.right = left+"px";
-
+      if (left < 250)
+      {
+        left +=10;
+        document.getElementById("rocket").style.right = left+"px";
+      }
       break;
+
     case "Right":
-      left -=10;
+      if (left > -250)
+      {
+       left -=10;
       document.getElementById("rocket").style.right = left+"px";
-
+      }
       break;
+
   }
 }
 
